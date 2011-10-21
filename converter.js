@@ -31,6 +31,7 @@
 			Debug : false,    //<boolean> e.g. allow failing by throwing errors, logging...
 			get FileAccess()  { return typeof(window.File) !== 'undefined' && typeof(window.FileReader) === 'function' && typeof(window.FileList) !== 'undefined'; },
    			get DragSupport()    { var el = document.getElementsByTagName('body')[0]; if(!el) return false; else return el.hasOwnProperty('ondragenter') && el.hasOwnProperty('ondragend'); },
+			Unique : function(a){ return a.sort().filter( function(v,i,o){if(i>0 && v!==o[i-1]) return v;}); },
 		  }})();
 		
 		/**
@@ -221,18 +222,20 @@
 							  //console.log("onload:", e.target.result)
 							  j2.data = e.target.result;
 							  //Process file and build tab-list
+							  //update: (ftp|http|htttp) -> [fht]+tps?; /(^(ftp|http|htttp):\/\/[a-z0-9|&!%$()?.\/=+#-;]+)/ -> [ -^] ; see my gists
 							  var urls = j2.data.	
 							  			split(/(?=(ftp|http|htttp):\/\/)/).	
 										filter(function(v){return v.length>6}).
-										map( function(v,k,a){ var a=v.match(/(^(ftp|http|htttp):\/\/[a-z0-9|&!%$()?.\/=+#-;]+)/ig); if(a && a.length) return a.pop(); } ).
+										map( function(v,k,a){ var a=v.match(/(^[fht]+tps?:\/\/[ -^]+)/ig); if(a && a.length) return a.pop(); } ).
 										filter(String);
+								urls = is.Unique(urls);
 								//=> modern browsers now have the powerful el.insertAdjacentHTML("afterBegin",....)
 								//var html = '<a class="recent-window recent-menu-item" href="'+''+'">'+urls.length+' Tab(s)</a>';
 								//access to local resources is not permitted: e.g. '<a class="recent-menu-item" href="'+v+'" style="background-image: url(chrome://favicon/'+v+'); ">'+
 								var html = urls.map( function(v){ if(v) return innerHTML = '<a class="recent-menu-item" href="'+v+'" style="background-image: url(res/ico/link16.png);">'+
 								//not even via an iframe....
 								//'<iframe src="chrome://favicon/'+v+'" border="0" style="width:16px; height:16px;"></iframe>'+
-																	v.match(/(^(ftp|http|htttp):\/\/[a-z0-9.\-_]+)/i)[1] +'</a>' }).join('');
+																	v.match(/(^[fht]+tps?:\/\/[a-z0-9.\-_]+)/i)[1] +'</a>' }).join('');
 								elmenu.innerHTML = html;
 								
 								//create open all tabs -> limited to popups unfortunately on some browsers; works fine with Chrome (i.e. user-initiated action)

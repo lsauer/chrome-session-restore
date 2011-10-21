@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head>
-	<title>JSON2SQL Service - JASON to SEQUEL</title>
+	<title>Chrome Session Restore / Recovery of corrupted Session files</title>
 
 	<!-- Meta Tags -->
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -10,7 +10,7 @@
     <!-- Load in Google Frame in older Internet Explorer versions -->
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 	<meta name="copyright" content="Copyright 20011 by Lo Sauer / BSD License" />
-	<meta name="company" content="UoV" />
+	<meta name="company" content="University of Vienna" />
 	<link rel="shortcut icon" href="res/ico/favicon_mascm.ico" />
     <!--<link href="converter.css" rel="stylesheet" type="text/css; charset=utf-8" media="screen" />-->
 
@@ -54,15 +54,20 @@
 		font:.8em normal Verdana, Geneva, sans-serif;
 		}
 		h1.main {
-			text-shadow: #a0a0a0 3px 3px 4px;
+			text-shadow: #a0a0a0 3px 3px 4px;letter-spacing:4px;
 			color:#eee;
 			line-height:2em;
+			cursor:default;
+			margin:10px;
 		}
 		h1.main:hover{
 			text-shadow: #909090 3px 3px 10px;
-			color: #999;
+			color: #333;
 			text-transform:capitalize;
 			cursor:url(res/ico/bluescreen16.gif); /*(c) 2010 Lorenz Sauer , CC-BY-SA v3*/
+			-o-transition: color 1s linear;
+			-moz-transition: color 1s linear;
+			-webkit-transition: color 1s linear;
 		}
 		hr {
 			border:none;
@@ -79,6 +84,10 @@
 		a:hover {
 			color: #CCC;
 			text-decoration: underline;
+			-o-transition: color 1s linear;
+			-moz-transition: color 1s linear;
+			-webkit-transition: color 1s linear;
+
 		}
 		.author, .features {
 			width:300px;
@@ -87,12 +96,19 @@
 			border: 1px  solid #eee;
 			right:10px;
 			position:fixed;
-			top:20px;
+			top:50px;
 			border-radius:5px;
-			background: #8f8f8f url('res/img/html_bg_gradient.png') repeat-x scroll;
+			background: #8f8f8f;
 			line-height:1.2em;
 			float:right;
 			color:#fff;
+			opacity:.6;
+		}
+		.author:hover {
+			opacity:1;
+			-o-transition: opacity 1s linear;
+			-moz-transition: opacity 1s linear;
+			-webkit-transition: opacity 1s linear;
 		}
 		textarea {
 			resize: vertical;
@@ -301,12 +317,14 @@
       Download the <a href="https://github.com/lsauer/json2sql/"> code from github</a></div>
       <p>
       <h1 class="main">&nbsp;Chrome Session Saver Loader</h1>
-      <br><br><br>
-      <li class="liFeature">Drag and Drop a Chrome Session Saver File onto the <u><b>Chrome-Footer bar </b></u>or use the alternative file-upload, shown for none DnD-supported browsers. Your browser must support FileReader.<br>
+ 
+      <li class="liFeature" style="margin-top:70px;">Drag and Drop a Chrome Session Saver File onto the <u><b>Chrome-Footer bar </b></u>or use the alternative file-upload, shown for none DnD-supported browsers. Your browser must support FileReader.<br>
         <br>
         Find your Chrome Session Saver files in <a href="http://dev.chromium.org/user-experience/user-data-directory"> Chrome's Application Data folder</a> (on <em>Windows </em> c:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data\, on <em>Linux</em>: ~/.config/google-chrome/Default) and sort by last modifications (Linux: ls -tr) <br>
     <br>
-      <strong>Note</strong>: This project is not associated with Google, but <em>the Google is associated with the Projects</em>.</li>
+      <strong>Note</strong>: This project is not associated with Google, but <em>the Google is associated with the Projects</em>.<br>
+      <br>
+      <strong><a href="Last Tabs" target="_new">Download this sample file</a> </strong>(right click-&gt;save as) and drag and drop it onto the Chrome footer-bar! </li>
         <div>
           <div id="footer" title="drag and drop a file in here!" >
             <div class="chrome_logo">&nbsp;</div>
