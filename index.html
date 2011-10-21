@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html><head>
+	<title>JSON2SQL Service - JASON to SEQUEL</title>
+
+	<!-- Meta Tags -->
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Chrome Session Restore / Recovery of corrupted Session files" />
+	<meta name="description" content="A web app which restores chromium tabs via a drag and drop web interface" />
+	<meta name="author" content="Lo Sauer 2011" />
+    <!-- Load in Google Frame in older Internet Explorer versions -->
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="copyright" content="Copyright 20011 by Lo Sauer / BSD License" />
+	<meta name="company" content="UoV" />
+	<link rel="shortcut icon" href="res/ico/favicon_mascm.ico" />
+    <!--<link href="converter.css" rel="stylesheet" type="text/css; charset=utf-8" media="screen" />-->
+
+	<!--
+    // author: (c) 2011 by Lorenz Lo Sauer; lsauer.com
+    // 
+    // Permission is hereby granted, free of charge, to any person obtaining a copy
+    // of this software and associated documentation files (the "Software"), to deal
+    // in the Software without restriction, including without limitation the rights
+    // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    // copies of the Software, and to permit persons to whom the Software is
+    // furnished to do so, subject to the following conditions:
+    // 
+    // The above copyright notice and this permission notice shall be included in
+    // all copies or substantial portions of the Software.
+    // 
+    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    // THE SOFTWARE.
+    //
+    // Design 10/2011 by Lo Sauer, MIT-LICENSE or BSD-LICENSE
+    // Design of the Chromium Logo by Google Inc.; Parts are Chrome CSS - BSD license applies
+    
+    //Note this code is part of the converter-project base hosted@github.com/lsauer,
+    // and thus more functionality may be offered than required; please do strip unused parts
+    
+    -->
+	<style type="text/css">
+	.bgmodern {
+		background-image: url(	"data:image/gif;base64,R0lGODlhEAAJALMAAB0eIBobHRgZGxESFBAREw8QEgsMDQsLDAgICQUFBgAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAAAQAAkAAAQzsKCUULmHUkPI1EgnZIkhdJrWEQEABEOcUmu9kpttj9vZfZZLofWKDT6UkG41SyyZs04EADs=");
+	}
+		body {
+		display: block;
+		margin: 0px;
+		overflow:hidden;
+		background-repeat:repeat;
+		font:.8em normal Verdana, Geneva, sans-serif;
+		}
+		h1.main {
+			text-shadow: #a0a0a0 3px 3px 4px;
+			color:#eee;
+			line-height:2em;
+		}
+		h1.main:hover{
+			text-shadow: #909090 3px 3px 10px;
+			color: #999;
+			text-transform:capitalize;
+			cursor:url(res/ico/bluescreen16.gif); /*(c) 2010 Lorenz Sauer , CC-BY-SA v3*/
+		}
+		hr {
+			border:none;
+			margin:6px;
+			border-top: 1px dotted #aaa;
+			/*border-radius: 5px;*/
+		}
+		a {
+			color: #666;
+			font-weight: none;
+			text-decoration: none;
+		}
+		
+		a:hover {
+			color: #CCC;
+			text-decoration: underline;
+		}
+		.author, .features {
+			width:300px;
+			height:50px;
+			padding:5px;
+			border: 1px  solid #eee;
+			right:10px;
+			position:fixed;
+			top:20px;
+			border-radius:5px;
+			background: #8f8f8f url('res/img/html_bg_gradient.png') repeat-x scroll;
+			line-height:1.2em;
+			float:right;
+			color:#fff;
+		}
+		textarea {
+			resize: vertical;
+		}
+		* {
+		margin: 0px;
+		padding: 0px;
+		}
+/*
+		* ::-webkit-scrollbar {
+			width: 9px;
+			height: 9px;
+		}
+		* ::-webkit-scrollbar-track-piece {
+		background-color: #FAFAFA;
+		-webkit-border-radius: 0;
+		-webkit-border-bottom-right-radius: 8px;
+		-webkit-border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px 8px;
+		border-bottom-left-radius: 8px 8px;
+		}*/
+		::-webkit-scrollbar{
+		width:10px; height: 10px;
+		
+		}
+		::-webkit-scrollbar-button:start:decrement,
+		::-webkit-scrollbar-button:end:increment  {
+		 height: 10px;
+		 display: block;
+		 background-color: #2b2b2b;
+		border-color: #3b3b3b;
+		border-radius: 10px;
+		-webkit-border-radius: 10px;
+		 }
+		::-webkit-scrollbar-track-piece  {
+		 background-color: #3b3b3b;
+		 -webkit-border-radius: 6px;
+		 }
+		::-webkit-scrollbar-thumb:vertical {
+		 height: 50px;
+		 background-color: #666;
+		 border: 1px solid #eee;
+		 -webkit-border-radius: 6px;
+		 }
+
+		#recently-closed-menu-button {
+		  background: none;
+		  border: 0;
+		  color: #7F7F7F;
+		  cursor: pointer;
+		  display: inline-block;
+		  font-size: 9pt;
+		  font-weight: bold;
+		  /* The padding increases the clickable area. */
+		  padding-bottom: 8px;
+		  padding-top: 8px;
+		  -webkit-appearance: none;
+		  -webkit-transition: opacity 0.2s;
+		  -webkit-transition-delay: 0.1s;
+		  clear: none;
+		}
+	/*styles partially from Google-Chrome. BSD license*/
+		.recent-window {
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA0UlEQVR42s2OSwsBYRSGz1+Uv6CQyTUsLFzKlFtmMWUQvkSJxIgfYGVrZWFjr9jY2L3mzJSUoo6NxdPbWTxPhwCQWq+gNisMmDWv7a5yVvHtYrsoZuPBLvXsOfzWVURvOQdZ0wna2xt2++OT5uIAX+vyFWs2AZnjoSudzvdXOPL1A3M0BBn9jie9w+GPGP0uqNYyPUFA1XFJNxrigG7UQYWKLg4UK2VQrpQXB9j9g0A2lxUHMo5LqUxCHEilk6BYXBMHoo5LES0oDrBL4VAAv/AAQoVZHAc9DoAAAAAASUVORK5CYII=");
+	}	
+	.recent-menu {
+		padding: 6px 8px;
+		z-index: 10;
+	}
+	
+	menu {
+		-webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, .50);
+		background: white;
+		color: black;
+		cursor: default;
+		display: none;
+		left: 0;
+		margin: 0;
+		outline: 1px solid rgba(0, 0, 0, 0.2);
+		padding: 8px 0;
+		position: fixed;
+		white-space: nowrap;
+		z-index: 3;
+		outline-offset: -2px;
+		-webkit-box-shadow: 0 0 18px rgba(82,168,236,0.7);
+		border-color: rgba(82, 168, 236, 0.75)!important;
+		border-radius:10px;
+	}
+	
+	ul, menu, dir {
+		display: block;
+		list-style-type: disc;
+		-webkit-margin-before: 1em;
+		-webkit-margin-after: 1em;
+		-webkit-margin-start: 0px;
+		-webkit-margin-end: 0px;
+		-webkit-padding-start: 40px;
+	}
+	
+	.recent-menu-item:active, .recent-menu-item:visited, .recent-menu-item:link {
+		color: #063874 !important;
+	}
+	
+	.recent-menu-item:first-of-type {
+		margin-top: 4px;
+	}
+	
+	.recent-menu-item:not(:hover) {
+		text-decoration: none;
+	}
+	
+	.recent-menu-item {
+		background-repeat: no-repeat;
+		background-position: 0% 50%;
+		background-color: transparent !important;
+		background-size: 16px 16px;
+		box-sizing: border-box;
+		display: block;
+		font-size: 100%;
+		line-height: 20px;
+		margin: 8px;
+		max-width: 450px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		-webkit-margin-start: 0;
+		-webkit-padding-end: 0;
+		-webkit-padding-start: 22px;
+	}
+	
+	menu > :not(hr) {
+		-webkit-appearance: none;
+		background: transparent;
+		border: 0;
+		font: inherit;
+		line-height: 18px;
+		overflow: hidden;
+		padding: 0 19px;
+		text-overflow: ellipsis;
+	}
+	
+	menu > * {
+		box-sizing: border-box;
+		display: block;
+		margin: 0;
+		width: 100%;
+		text-align: start;
+	}
+	
+	#footer {
+		background-image: -webkit-linear-gradient( rgba(222, 242, 202, 0.7), rgba(222, 222, 222, 0.9));
+		bottom: 0;
+		left:0px;
+		position: fixed;
+		width: 100%;
+		z-index: 5;
+	}
+	.chrome_logo{
+		height: 40px; width:200px;
+		margin-left:5px;
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAAAgCAYAAABtn4gCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpGOTdGMTE3NDA3MjA2ODExODhDNkMyNDRFMTVCNUEwOSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxQzlFNjQzRjQyREMxMUUwQTFFQ0RGNTlGMzNBRTIwQSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxQzlFNjQzRTQyREMxMUUwQTFFQ0RGNTlGMzNBRTIwQSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA0ODAxMTc0MDcyMDY4MTFCNjk5RjQ4RDZEMjY3RTI3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkY5N0YxMTc0MDcyMDY4MTE4OEM2QzI0NEUxNUI1QTA5Ii8+IDwvcmRmOkRlc2NyaXB0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");
+		background-repeat:no-repeat;
+		display:inline-block;
+		clear: none;
+	}
+	.disclosure-triangle {
+		background-color: #7F7F7F;
+		display: inline-block;
+		height: 9px;
+		width: 9px;
+		-webkit-mask-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAJUlEQVQYV2NgoDuYSQSGK/RB0+yDrACbQqwKkBUW41OArJB0AAACXws0ERupuAAAAABJRU5ErkJggg==");
+	}
+	.liFeature, .liOptions, .liOptionsOn {
+		padding:2px 20px 2px 25px;
+		font:1em normal Verdana, Geneva, sans-serif;
+		background: #444 url(res/ico/star16.png) no-repeat 4px 1px;
+		display:inline-block;
+		border:1px solid #aaa;
+		border-radius:5px;
+		margin:10px;
+		color:#fff;
+	
+	}
+	.liOptions {
+		background: #666 url(res/ico/bulb16.png) no-repeat 4px 1px;
+		clear:both;
+		display:block;
+	}
+	.liOptionsOn {
+		background: #777 url(res/ico/bulbglow16.png) no-repeat 4px 1px;
+		clear:both;
+		display:block;
+	}
+
+	</style>
+    <script language="javascript" type="text/javascript" src="converter.js">
+    </script>
+    <script>
+
+    
+    </script>
+</head>
+<body class="bgmodern">
+    <div class="maindiv">
+      <div class="author"><img src="res/ico/github-icon.png" style="float:right;" width="42" height="42">Created by <i>Lo Sauer</i> 2011              - BSD license<br>
+      Download the <a href="https://github.com/lsauer/json2sql/"> code from github</a></div>
+      <p>
+      <h1 class="main">&nbsp;Chrome Session Saver Loader</h1>
+      <br><br><br>
+      <li class="liFeature">Drag and Drop a Chrome Session Saver File onto the <u><b>Chrome-Footer bar </b></u>or use the alternative file-upload, shown for none DnD-supported browsers. Your browser must support FileReader.<br>
+        <br>
+        Find your Chrome Session Saver files in <a href="http://dev.chromium.org/user-experience/user-data-directory"> Chrome's Application Data folder</a> (on <em>Windows </em> c:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data\, on <em>Linux</em>: ~/.config/google-chrome/Default) and sort by last modifications (Linux: ls -tr) <br>
+    <br>
+      <strong>Note</strong>: This project is not associated with Google, but <em>the Google is associated with the Projects</em>.</li>
+        <div>
+          <div id="footer" title="drag and drop a file in here!" >
+            <div class="chrome_logo">&nbsp;</div>
+            <button id="recently-closed-menu-button" class=""> <span i18n-content="recentlyclosed">Recently closed</span>
+            <div class="disclosure-triangle"></div>
+            </button>
+            <input id="jsonfiles" type="file" name="jsonfiles[]" multiple="multiple" accept="text/sql/json" style="opacity:.5; margin-left:10px;">
+          <span style="opacity:.7; color:#666; font-weight:bold;"><label title="Maximum number of tabs to open" for="maxtabs">Max #Tabs:</label> <input id="maxtabs" type="number" min="5" max="50" step="5" value ="5" size="1"  style="width:35px; border-width:1px; border-radius:6px;opacity:.8; color:#fff;" class="bgmodern"/></span></div>
+          <menu id="recent-menu" class="recent-menu" style="position:absolute; left: 10px; bottom:26px; right: auto; display: none; max-height:500px; overflow:auto; opacity:.9;">
+          <!--Note unless the web-app runs from the chrome:// -service-namespace, no permission is granted to access local files; This is just a sample entry for demonstration purposes-->
+            <a class="recent-menu-item" href="http://dev.chromium.org/user-experience/user-data-directory" style="background-image: url(chrome://favicon/http://dev.chromium.org/user-experience/user-data-directory); ">Sample-Entry: User Data Directory - The Chromium Projects</a>
+          </menu>
+      </div>
+        <div id="fileslist"></div>
+    </div>
+    <script language="javascript">j2timer(); console.log("Timer log:", tdlog);</script>
+</body>
+</html>
