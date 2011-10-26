@@ -43,15 +43,24 @@
     
     -->
 	<style type="text/css">
-	.bgmodern {
-		background-image: url(	"data:image/gif;base64,R0lGODlhEAAJALMAAB0eIBobHRgZGxESFBAREw8QEgsMDQsLDAgICQUFBgAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAAAQAAkAAAQzsKCUULmHUkPI1EgnZIkhdJrWEQEABEOcUmu9kpttj9vZfZZLofWKDT6UkG41SyyZs04EADs=");
-	}
+		* {
+		margin: 0px;
+		padding: 0px;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+		}
 		body {
 		display: block;
 		margin: 0px;
 		overflow:hidden;
 		background-repeat:repeat;
 		font:.8em normal Verdana, Geneva, sans-serif;
+		}
+		.bgmodern {
+		background-image: url(	"data:image/gif;base64,R0lGODlhEAAJALMAAB0eIBobHRgZGxESFBAREw8QEgsMDQsLDAgICQUFBgAAAAAAAAAAAAAAAAAAAAAAACH5BAAHAP8ALAAAAAAQAAkAAAQzsKCUULmHUkPI1EgnZIkhdJrWEQEABEOcUmu9kpttj9vZfZZLofWKDT6UkG41SyyZs04EADs=");
 		}
 		h1.main {
 			text-shadow: #a0a0a0 3px 3px 4px;letter-spacing:4px;
@@ -75,18 +84,24 @@
 			border-top: 1px dotted #aaa;
 			/*border-radius: 5px;*/
 		}
-		a {
+		a:link {
+			background-color: #eee; /*#407EC9*/
+			border-radius:5px;
+			padding:0px 2px 0px 2px;
 			color: #666;
 			font-weight: none;
 			text-decoration: none;
+			opacity:.7;
 		}
 		
 		a:hover {
+			opacity:1;
 			color: #CCC;
+			background-color: #407EC9; /*#407EC9*/
 			text-decoration: underline;
-			-o-transition: color 1s linear;
-			-moz-transition: color 1s linear;
-			-webkit-transition: color 1s linear;
+			-o-transition: background .5s linear;
+			-moz-transition: background .5s linear;
+			-webkit-transition: background .5s linear;
 
 		}
 		.author, .features {
@@ -113,10 +128,7 @@
 		textarea {
 			resize: vertical;
 		}
-		* {
-		margin: 0px;
-		padding: 0px;
-		}
+
 /*
 		* ::-webkit-scrollbar {
 			width: 9px;
@@ -210,6 +222,7 @@
 	
 	.recent-menu-item:active, .recent-menu-item:visited, .recent-menu-item:link {
 		color: #063874 !important;
+		padding-left: 25px !important;
 	}
 	
 	.recent-menu-item:first-of-type {
@@ -265,6 +278,14 @@
 		position: fixed;
 		width: 100%;
 		z-index: 5;
+		/*-webkit-user-drag:element;*/
+	}
+	.footer-drag {
+		/*set the shadow-box*/
+		outline-offset: -2px;
+		-webkit-box-shadow: 0 0 28px rgba(182,168,236,0.9);
+		border-color: rgba(82, 168, 236, 0.75)!important;
+		border-radius:5px;
 	}
 	.chrome_logo{
 		height: 40px; width:200px;

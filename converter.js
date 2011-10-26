@@ -206,6 +206,7 @@
 				*/		
 				function xhrUploader(el) {		
 					var cls = new Classy( gel('jsontext') );			
+					var cssClassDrag = 'footer-drag';
 					//typeof(window.File) is function or object
 					// if DnD is supported... should evaluate true in Chrome > v 12
 					var freader = j2.freader;
@@ -264,18 +265,18 @@
 								j2.elIF.onchange(e);
 						};
 
-						el.ondragenter = el.ondragstart = function(e) { 
+						el.ondragenter = el.ondragstart = function(e) { console.log(e.target.className);
 									eventstop(e); /*must be on top for Firefox*/
 									//e.target.style.backgroundColor = "#ffc";
 									//j2.cls.add('jtxtactive');
-									e.target.className += /(jtxtactive)/ig.test(e.target.className) ? '' : ' jtxtactive';
+									e.target.className += RegExp('('+cssClassDrag+')','ig').test(e.target.className) ? '' : ' '+cssClassDrag;
 						};
 						//el.addEventListener('dragenter', function(e) {}, false);
 						el.dragend = el.ondragleave = function(e) {
 									eventstop(e);
 									//e.target.style.backgroundColor = "#fff"; 
 									//j2.cls.del('jtxtactive');
-									e.target.className = e.target.className.replace(/[\s]*jtxtactive[\s]*/ig, ' ');
+									e.target.className = e.target.className.replace(RegExp('[\\\s]*'+cssClassDrag+'[\\\s]*','ig'), ' ');
 						};
 						el.addEventListener('dragover', function(e) { 
 									eventstop(e); 
