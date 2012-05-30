@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html><head>
-	<title>Chrome Session Restore / Recovery of corrupted Session files</title>
+	<title>Chrome Session Restore / Recovery of corrupted Session files #web app design github</title>
 
 	<!-- Meta Tags -->
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="keywords" content="Chrome Session Restore / Recovery of corrupted Session files" />
-	<meta name="description" content="A web app which restores chromium tabs via a drag and drop web interface" />
+	<meta name="keywords" content="Chrome Crashed-Session Restore / Recovery of corrupted Session files [web app design github]" />
+	<meta name="description" content="A web app to restores Goole Chrome Browser tabs through a drag and drop web interface" />
 	<meta name="author" content="Lo Sauer 2011" />
     <!-- Load in Google Frame in older Internet Explorer versions -->
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-	<meta name="copyright" content="Copyright 20011 by Lo Sauer / BSD License" />
-	<meta name="company" content="University of Vienna" />
+	<meta name="copyright" content="Copyright 2011 by Lo Sauer / BSD License" />
+	<meta name="company" content="NA" />
 	<link rel="shortcut icon" href="res/ico/favicon_mascm.ico" />
     <!--<link href="converter.css" rel="stylesheet" type="text/css; charset=utf-8" media="screen" />-->
 
@@ -35,11 +35,11 @@
     // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     // THE SOFTWARE.
     //
-    // Design 10/2011 by Lo Sauer, MIT-LICENSE or BSD-LICENSE
-    // Design of the Chromium Logo by Google Inc.; Parts are Chrome CSS - BSD license applies
+    // Design 10/2011 by Lo Sauer, MIT-LICENSE or BSD-LICENSE applies
+    // Design of the Chromium Logo and CSS by Google Inc.; BSD license applies to the CSS
     
-    //Note this code is part of the converter-project base hosted@github.com/lsauer,
-    // and thus more functionality may be offered than required; please do strip unused parts
+    //Not:e this code is part of the converter-project base hosted at github.com/lsauer,
+    // and thus more functionality may be offered than required; unused parts can be cut
     
     -->
 	<style type="text/css">
@@ -51,6 +51,13 @@
 		-moz-user-select: none;
 		-o-user-select: none;
 		user-select: none;
+		}
+		input {
+		-webkit-user-select: text;
+		-khtml-user-select: text;
+		-moz-user-select: text;
+		-o-user-select: text;
+		user-select: text;
 		}
 		body {
 		display: block;
@@ -85,7 +92,8 @@
 			border-top: 1px dotted #aaa;
 			/*border-radius: 5px;*/
 		}
-		a:link {
+		a{	cursor:pointer; }
+		a, a:link {
 			background-color: #eee; /*#407EC9*/
 			border-radius:5px;
 			padding:0px 2px 0px 2px;
@@ -106,13 +114,13 @@
 
 		}
 		.author, .features {
-			width:300px;
+			width:200px;
 			height:50px;
 			padding:5px;
 			border: 1px  solid #eee;
-			right:10px;
+			right:60px;
 			position:fixed;
-			top:50px;
+			top:55px;
 			border-radius:5px;
 			background: #8f8f8f;
 			line-height:1.2em;
@@ -274,12 +282,19 @@
 	
 	#footer {
 		background-image: -webkit-linear-gradient( rgba(222, 242, 202, 0.7), rgba(222, 222, 222, 0.9));
-		bottom: 0;
+		bottom: -10px;
 		left:0px;
 		position: fixed;
 		width: 100%;
 		z-index: 5;
+		border-top-left-radius: 40px;
+		border-top-right-radius: 40px;
+		-webkit-transition:bottom .3s linear;
 		/*-webkit-user-drag:element;*/
+	}
+	#footer:hover{
+		bottom: 0px;
+		-webkit-transition:bottom .3s linear;
 	}
 	.footer-drag {
 		/*set the shadow-box*/
@@ -290,7 +305,7 @@
 	}
 	.chrome_logo{
 		height: 40px; width:200px;
-		margin-left:5px;
+		margin-left:20px;
 	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAAAgCAYAAABtn4gCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpGOTdGMTE3NDA3MjA2ODExODhDNkMyNDRFMTVCNUEwOSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxQzlFNjQzRjQyREMxMUUwQTFFQ0RGNTlGMzNBRTIwQSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxQzlFNjQzRTQyREMxMUUwQTFFQ0RGNTlGMzNBRTIwQSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjA0ODAxMTc0MDcyMDY4MTFCNjk5RjQ4RDZEMjY3RTI3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkY5N0YxMTc0MDcyMDY4MTE4OEM2QzI0NEUxNUI1QTA5Ii8+IDwvcmRmOkRlc2NyaXB0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");
 		background-repeat:no-repeat;
 		display:inline-block;
@@ -324,6 +339,11 @@
 		clear:both;
 		display:block;
 	}
+	.rotate180{
+		-webkit-transform: rotate(180deg);
+		transform: rotate(180deg);
+		background-color: yellow;
+	}
 
 	</style>
     <script language="javascript" type="text/javascript" src="converter.js">
@@ -334,27 +354,42 @@
     </script>
 </head>
 <body class="bgmodern">
-<a href="http://github.com/lsauer/chrome-session-restore"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://metgate.org/KeyBoarder/res/img/forkme.png" alt="Fork 'Chrome Session Restore' on GitHub"></a>
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_16x16_style" style="right:20px;top:30px;">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e809cc4494aaf1c"></script>
+<!-- AddThis Button END -->      
+<a href="https://github.com/lsauer/chrome-session-restore/tree/gh-pages"><img style="position: absolute; top: 0; left: 0; border: 0;" src="http://metgate.org/KeyBoarder/res/img/forkme.png" alt="Fork 'Chrome Session Restore' on GitHub"></a>
     <div class="maindiv">
-      <div class="author"><img src="res/ico/github-icon.png" style="float:right;" width="42" height="42">Created by <i>Lo Sauer</i> 2011              - BSD license<br>
-      Download the <a href="https://github.com/lsauer/chrome-session-restore"> code from github</a></div>
+      <div class="author"><img src="res/ico/github-icon.png" style="float:right;" width="42" height="42">Created by <i>Lo Sauer</i>, 2011<br>
+      Download @ <a href="https://github.com/lsauer/chrome-session-restore">github</a><br/>(BSD license)
+      
+      </div>
       <p>
       <h1 class="main">&nbsp;Restore Crashed Chrome Tab-Sessions / Session-File Restore Loader</h1>
  
 <li class="liFeature" style="margin-top:70px;height: 300px;overflow: auto;">
-<h2>What?</h2><br>Things crash. This is part of life. Sometimes metal or metal-alloys crash, such as Chrome, due to material fatigue. Again, this is part of life. What shouldn't be part though, are unstored browser sessions. Fortunately, browser sessions aren't lost per se. Opening one link is easy. You just click it. Opening dozens of links gets tedious. For tedious things, we have automatons such as computers running neat applications. Unfortuantely automatiation in this case is limited to popups and modal-dialogs for all to obvious reasons. The term popup is rarely associated pleasantly. This web-application serves as a proof of principle for opening as many tabs at once as the user-specifies, based on user-selected session files.<br> The User interface is leaned on Chrome's own UI design.<br><br>
+<h2>What?</h2><br><strong>a)</strong> Things crash. Crashing is part of life. Sometimes web-browsers such as Google's Chrome crash. After restarting, Chrome's previous tabs may be gone. Probably material fatigue :) Fortunately, Chrome's sessions aren't lost and savely reside in files on your harddrive. <br><strong>b)</strong> Opening any one link is easy. You just click it. Opening dozens of links gets tedious. For tedious things, we have automatons such as computers running applications. Unfortuantely, link-opening automation-tasks are limited to <i>popups</i> and <i>modal-windows</i>, for all to obvious reasons. <br><strong>c) =a+b </strong> This client-based web-application (i.e. nothing is uploaded), processes user-selected session files, to subsequently open 
+as many tabs at once as the user-specified, thus serving as a proof of principle that tab-opening automation is possible.<br> The User interface is leaned on Chrome's own UI design.<br><br>
 <h2>How?</h2><br>
-<ol>
-<li>Drag and drop (DnD) a "Chrome Tab Session File" from one of Chrome's 'user profile-folders' into the <u><b>footer-bar at the bottom, which then glows.</b></u> </li>
+<ol style="margin-left:30px;">
+<li>Drag and drop (DnD) a "Chrome Tab Session File" from one of Chrome's 'user profile-folders' (See <i>Note 3</i>) into the <u><b>footer-bar at the bottom, which then glows.</b></u> </li>
 <li>Click on the small arrow in the bottom-bar to open a list of restorable tabs. Clicking the topmost icon will open the first #n-th tabs , with the maximum number of tabs specified in the adjacent number-input.</li>
 <li>Other session files can be drag and dropped, but ensure that the tabs-menu, which extends from the footer-bar, is closed. </li>
 </ol>
-<strong>Note 1:</strong>An alternative file-upload input is displayed for non-DnD supporting Browsers. Your browser must support the HTML5-FileReader API.<br>
+<strong>Note 1:</strong> An alternative file-upload input is displayed for non-DnD supporting Browsers. Your browser must support the HTML5-FileReader API.<br>
 
-<strong>Note 2:</strong>More technical details are provided <a href="http://lsauer.com/2011/10/google-chrome-session-restore-web.html" target="_new">here</a>. <br>
-<strong>Note 3:</strong>Find your Chrome Session Saver files in <a href="http://dev.chromium.org/user-experience/user-data-directory">&nbsp;Chrome's Application Data folder</a>&nbsp;(on&nbsp;<em>Windows&nbsp;</em>&nbsp;c:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data\, on&nbsp;<em>Linux</em>:&nbsp;<a href="file:///~/.config/google-chrome/Default" target="_new">~/.config/google-chrome/Default</a>) and sort by last modifications (Linux: ls -tr) <br>
-<br><h2>Why?</h2><br>
-My Chrome experiences material fatigue now and then. Browser extensions are given greater security premissions, so restoring sessions becomes trivial. Yet they eat up resources and often inject Code into every web-site that is being loaded, thus potentially interferring with its layout or behavior. Less extensions means less worries. Finally, installing a standalone application for something trivial didn't sit well-with me.
+<strong>Note 2:</strong> More technical details are provided <a href="http://lsauer.com/2011/10/google-chrome-session-restore-web.html" target="_new">here</a>. <br>
+<strong>Note 3:</strong> Find your Chrome Session Saver files in <em>Windows</em> at&nbsp;<a onClick="window.prompt('Press CTRL+C, then ENTER',this.innerText);">%HOMEPATH%\AppData\Local\Google\Chrome\User Data\</a>, and in &nbsp;<em>Linux</em> at&nbsp;<a onClick="window.prompt('Press CTRL+C, then ENTER',this.innerText);">~/.config/google-chrome/Default</a>. Sort your files by <i>last modifications</i>(Linux: ls -tr); Copy and past the path in your file-explorer or file-input dialog of the application. For more information visit, <a href="http://dev.chromium.org/user-experience/user-data-directory">&nbsp;Chrome's Application Data folder</a>&nbsp;<br>
+<strong>Note 4:</strong> Generic use is possible: The urls of other files (e.g. HTML-file) can be parsed-out and opened as well - BUT on a pure trial and error basis.
+<br><br><h2>Why?</h2><br>
+Chrome experiences material fatigue now and then. Browser extensions are given greater security premissions, so creating an app to restore sessions becomes trivial. Extensions constantly reside in the Browser, eating-up resources and often <i>injecting code</i> into every web-site that is being loaded. Such behavior can potentially interfere with the layout or behavior of webpages. Less extensions means less worries, the same regard holds for small standalone application to accomplish small, trivial tasks.
     <br><br>
       <strong>Note</strong>: This project is not associated with Google.<br>
       <br>
@@ -366,13 +401,16 @@ My Chrome experiences material fatigue now and then. Browser extensions are give
           <div id="footer" title="drag and drop a file in here!" >
             <div class="chrome_logo">&nbsp;</div>
             <button id="recently-closed-menu-button" class=""> <span i18n-content="recentlyclosed">Recently closed</span>
-            <div class="disclosure-triangle"></div>
+            <div id="icon_trianglemini" class="disclosure-triangle"></div>
             </button>
-            <input id="jsonfiles" type="file" name="jsonfiles[]" multiple="multiple" accept="text/sql/json" style="opacity:.5; margin-left:10px;">
-          <span style="opacity:.7; color:#666; font-weight:bold;"><label title="Maximum number of tabs to open" for="maxtabs">Max #Tabs:</label> <input id="maxtabs" type="number" min="5" max="50" step="5" value ="5" size="1"  style="width:35px; border-width:1px; border-radius:6px;opacity:.8; color:#fff;" class="bgmodern"/></span></div>
+            <input id="jsonfiles" type="file" name="jsonfiles[]" multiple="multiple" accept="text/sql/json" defaultValue="c:\Users\" value="c:\Users\" style="opacity:.5; margin-left:10px;">
+          <span style="opacity:.7; color:#666; font-weight:bold;"><label title="Maximum number of tabs to open" for="maxtabs">Max #Tabs:</label> <input id="maxtabs" type="number" min="5" max="50" step="3" value ="5" size="1" onchange="j2.freader.onload();"  style="width:35px; border-width:1px; border-radius:6px;opacity:.8; color:#fff;" class="bgmodern"/></span></div>
           <menu id="recent-menu" class="recent-menu" style="position:absolute; left: 10px; bottom:26px; right: auto; display: none; max-height:500px; overflow:auto; opacity:.9;">
           <!--Note unless the web-app runs from the chrome:// -service-namespace, no permission is granted to access local files; This is just a sample entry for demonstration purposes-->
-            <a class="recent-menu-item" href="http://dev.chromium.org/user-experience/user-data-directory" style="background-image: url(chrome://favicon/http://dev.chromium.org/user-experience/user-data-directory); ">Sample-Entry: User Data Directory - The Chromium Projects</a>
+            <a class="recent-menu-item" href="http://dev.chromium.org/user-experience/user-data-directory" target="_new" style="background-image: url(res/ico/link16.png); ">Example 1: The Chromium Projects</a>
+            <a class="recent-menu-item" href="http://www.lsauer.com" target="_new" style="background-image: url(res/ico/link16.png); ">Example 2: Lo's Blog </a>
+            <a class="recent-menu-item" href="http://www.greenpeace.org" target="_new" style="background-image: url(res/ico/link16.png); ">Example 3: Greenpeace </a>
+            <a class="recent-menu-item" href="http://www.who.org" target="_new" style="background-image: url(res/ico/link16.png); ">Example 4: WHO </a>
           </menu>
     </div>
         <div id="fileslist"></div>
