@@ -23,7 +23,7 @@
     // Design of the Chromium Logo by Google Inc.; Parts are Chrome CSS - BSD license applies
 
 		/**
-		* islib: see here for more; any unused functions are stripped
+		* islib: see https://github.com/lsauer/is-library for more information; any unused functions are stripped
 		*/
 		var is = (function(){
 		  return {
@@ -31,7 +31,7 @@
 			Debug : false,    //<boolean> e.g. allow failing by throwing errors, logging...
 			get FileAccess()  { return typeof(window.File) !== 'undefined' && typeof(window.FileReader) === 'function' && typeof(window.FileList) !== 'undefined'; },
    			get DragSupport()    { var el = document.getElementsByTagName('body')[0]; if(!el) return false; else return el.hasOwnProperty('ondragenter') && el.hasOwnProperty('ondragend'); },
-			Unique : function(a){ return a.sort().filter( function(v,i,o){if(i>0 && v!==o[i-1]) return v;}); },
+			Unique :        function(a)   { return a.sort().filter( function(v,i,o){if(i>=0 && v!==o[i-1]) return v;});},
 		  }})();
 		
 		/**
@@ -135,17 +135,19 @@
 			);
 			//add toggle listener
 			gel('recently-closed-menu-button').onclick = function(e){
-				var el = gEl('recent-menu');
-				if(el.style.display === 'none')
+				var el = gEl('recent-menu')
+					,iconarrow = gel('icon_trianglemini');
+				if(el.style.display === 'none'){
 					el.style.display = 'block';
-				else
+					iconarrow.className = 'disclosure-triangle rotate180';
+				}else{
 					el.style.display = 'none';
-
+					iconarrow.className = 'disclosure-triangle';
+				}
 				//without cancelBubble, the event would bubble to document, which would set the menu display to none!
 				e.cancelBubble = true;
 				return;
 			};
-
 			//converter codebase
 			j2 = {
 				fLarge : 3000000,
@@ -221,29 +223,38 @@
 								var maxopen = +gel('maxtabs').value || 5;	//max number of popups to open
 								var elmenu = gel('recent-menu');
 							  //console.log("onload:", e.target.result)
-							  j2.data = e.target.result;
+							if(e)
+							  	j2.data = e.target.result;
+							if(!j2.data)
+								return;
 							  //Process file and build tab-list
 							  //update: (ftp|http|htttp) -> [fht]+tps?; /(^(ftp|http|htttp):\/\/[a-z0-9|&!%$()?.\/=+#-;]+)/ -> [ -^] ; see my gists
-							  var urls = j2.data.	
-							  			split(/(?=(ftp|http|htttp):\/\/)/).	
-										filter(function(v){return v.length>6}).
-										map( function(v,k,a){ var a=v.match(/(^[fht]+tps?:\/\/[ -^]+)/ig); if(a && a.length) return a.pop(); } ).
-										filter(String);
+							  var urls = (j2.data.match(/([fht]+tps?:\/\/[ -^]+)/igm)||[])
+												 .filter(function(e){return e.length>6;})
+							  			//Old routine (2011)
+										//split(/(?=(ftp|http|htttp):\/\/)/).	
+										//filter(function(v){return v.length>6}).
+										//map( function(v,k,a){ console.log(v); var a=v.match(/(^[fht]+tps?:\/\/[ -^]+)/ig); if(a && a.length) return a.pop(); } ).
+										//filter(String);
 								urls = is.Unique(urls);
 								//=> modern browsers now have the powerful el.insertAdjacentHTML("afterBegin",....)
 								//var html = '<a class="recent-window recent-menu-item" href="'+''+'">'+urls.length+' Tab(s)</a>';
 								//access to local resources is not permitted: e.g. '<a class="recent-menu-item" href="'+v+'" style="background-image: url(chrome://favicon/'+v+'); ">'+
-								var html = urls.map( function(v){ if(v) return innerHTML = '<a class="recent-menu-item" href="'+v+'" style="background-image: url(res/ico/link16.png);">'+
-								//not even via an iframe....
-								//'<iframe src="chrome://favicon/'+v+'" border="0" style="width:16px; height:16px;"></iframe>'+
-																	v.match(/(^[fht]+tps?:\/\/[a-z0-9.\-_]+)/i)[1] +'</a>' }).join('');
+								//	...nor through an iframe....
+								//	'<iframe src="chrome://favicon/'+v+'" border="0" style="width:16px; height:16px;"></iframe>'+
+								var html = urls.map( function(e){ if(e){
+																	 var domain = e.split('/')[2] //e.match(/(^[fht]+tps?:\/\/[a-z0-9.\-_]+)/i)[1];
+																	    ,favicon = 'http://www.getfavicon.org/?url='+domain+'/favicon.png' //res/ico/link16.png
+																	 return innerHTML = '<a class="recent-menu-item" href="'+e+'" style="background-image: url('+favicon+');">'+domain
+																	}
+													}).join('');
 								elmenu.innerHTML = html;
 								
 								//create open all tabs -> limited to popups unfortunately on some browsers; works fine with Chrome (i.e. user-initiated action)
 								var ela = document.createElement('a');
 								ela.href = '#';
 								ela.className = "recent-window recent-menu-item";
-								ela.innerHTML = urls.length+' Tab(s)';
+								ela.innerHTML = 'Open '+Math.min(maxopen,urls.length)+' of all '+ urls.length+' Tab(s)';
 								//open the tabs upon clicking, requires user action; non-interaction: popup		
 								ela.onclick = function(){ urls.slice(0,maxopen).map(openTabsWin); };
 								elmenu.insertBefore(ela, elmenu.getElementsByTagName('a')[0])
