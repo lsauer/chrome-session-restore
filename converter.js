@@ -1,4 +1,3 @@
-
     // author: (c) 2011 by Lorenz Lo Sauer; lsauer.com
     // 
     // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -229,7 +228,7 @@
 								return;
 							  //Process file and build tab-list
 							  //update: (ftp|http|htttp) -> [fht]+tps?; /(^(ftp|http|htttp):\/\/[a-z0-9|&!%$()?.\/=+#-;]+)/ -> [ -^] ; see my gists
-							  var urls = (j2.data.match(/([fht]+tps?:\/\/[ -^]+)/igm)||[])
+							  var urls = (j2.data.match(/([fht]+tps?:\/\/[ -^_]+)/igm)||[])
 												 .filter(function(e){return e.length>6;})
 							  			//Old routine (2011)
 										//split(/(?=(ftp|http|htttp):\/\/)/).	
